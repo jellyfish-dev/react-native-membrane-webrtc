@@ -79,7 +79,8 @@
     "settings": {
       "import/resolver": {
         "babel-module": {}
-      }
+      },
+      "disableEslintIgnore": true
     },
     "rules": {
       "prettier/prettier": [
@@ -95,7 +96,8 @@
     }
   },
   "eslintIgnore": [
-    "node_modules/"
+    "node_modules/",
+    "example/e2e/backend"
   ],
   "prettier": {
     "quoteProps": "consistent",
@@ -108,9 +110,13 @@
     "@expo/config-plugins": "^4.1.5"
   },
   "lint-staged": {
-    "*.(js|ts|tsx)": [
+    "src/**/*.(js|ts|tsx)": [
       "prettier --write",
-      "eslint --ext '.js,.ts,.tsx' --max-warnings=0 src/ example/src/"
+      "eslint --ext '.js,.ts,.tsx' --max-warnings=0"
+    ],
+    "example/src/**/*.(js|ts|tsx)": [
+      "prettier --write",
+      "eslint --ext '.js,.ts,.tsx' --max-warnings=0"
     ]
   }
 }

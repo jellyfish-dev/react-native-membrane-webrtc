@@ -50,6 +50,7 @@ type TextInputProps = {
   onChangeText?: OnChangeTextType;
   sublabel?: string;
   sublabelIconSize?: number;
+  testID?: string;
 };
 
 export const TextInput = ({
@@ -58,6 +59,7 @@ export const TextInput = ({
   sublabelIconSize = 16,
   value,
   editable = true,
+  testID,
   onChangeText = () => {},
 }: TextInputProps) => {
   const [focusStyle, setFocusStyle] = useState(TextInputStyles.offFocus);
@@ -99,6 +101,7 @@ export const TextInput = ({
         // @ts-ignore
         colorCursor={TextColors.darkText}
         selectionColor={TextColors.additionalLightText}
+        testID={testID}
       />
       {!isEmpty(sublabel) ? (
         <View style={TextInputStyles.roomInputSubLabel}>

@@ -40,6 +40,7 @@ export const InitialScreen = ({ navigation }) => {
               onPress={() => {
                 navigation.push('CreateRoom');
               }}
+              testID="create-room"
             >
               Create new meeting
             </CardButton>

@@ -16,8 +16,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Navigation } from './Navigation';
 import { VideoroomContextProvider } from './VideoroomContext';
 
-SplashScreen.preventAutoHideAsync();
-
 Sentry.init({
   dsn: 'https://9da3a9c5ecdf4d47a731889e29d14c67@o4504956776415232.ingest.sentry.io/4504956777922560',
   // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.

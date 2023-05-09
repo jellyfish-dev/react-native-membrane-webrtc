@@ -29,6 +29,7 @@ export const CallControls = () => {
         <InCallButton
           iconName={!isCameraOn ? 'Cam-disabled' : 'Cam'}
           onPress={toggleCamera}
+          testID="toggle-camera-btn"
         />
       </View>
       <View style={styles.iconInRow}>

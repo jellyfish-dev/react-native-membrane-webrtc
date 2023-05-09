@@ -34,12 +34,14 @@ type CardButtonProps = {
   iconName: string;
   onPress: () => void;
   children: ReactNode;
+  testID?: string;
 };
 
 export const CardButton = ({
   iconName,
   onPress,
   children,
+  testID,
 }: CardButtonProps) => {
   const progress = useSharedValue(0);
   const debouncedOnPress = useDebounce(onPress);
@@ -63,6 +65,7 @@ export const CardButton = ({
         }}
         onPressOut={() => (progress.value = 0)}
         onPress={debouncedOnPress}
+        testID={testID}
       >
         <Animated.View
           style={[CardButtonStyles.animatedView, backgroundColorStyle]}

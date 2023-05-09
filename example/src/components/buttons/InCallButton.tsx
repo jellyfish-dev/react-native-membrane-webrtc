@@ -35,12 +35,14 @@ type InCallButtonProps = {
   type?: ButtonTypeName;
   onPress: (event: GestureResponderEvent) => void;
   iconName: string;
+  testID?: string;
 };
 
 export const InCallButton = ({
   type = 'primary',
   onPress,
   iconName,
+  testID,
 }: InCallButtonProps) => {
   const GetStylesForButtonType = (type: ButtonTypeName) => {
     return [
@@ -61,7 +63,7 @@ export const InCallButton = ({
   };
 
   return (
-    <Pressable onPress={onPress}>
+    <Pressable onPress={onPress} testID={testID}>
       <View style={GetStylesForButtonType(type)}>
         <Icon
           name={iconName}

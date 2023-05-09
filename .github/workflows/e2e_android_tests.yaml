@@ -1,0 +1,107 @@
+name: E2E Android tests
+on:
+  push:
+env:
+  LDFLAGS: "-L/usr/local/opt/openssl@1.1/lib"
+  CFLAGS: "-I/usr/local/opt/openssl@1.1/include/"
+  CPPFLAGS: "-I/usr/local/opt/openssl@1.1/include/"
+  PKG_CONFIG_PATH: "/usr/local/opt/openssl@1.1/lib/pkgconfig"
+jobs:
+  check:
+    runs-on: macos-latest
+    env:
+      MEMBRANE_UPLOAD_STORE_FILE: ${{ secrets.MEMBRANE_UPLOAD_STORE_FILE }}
+      MEMBRANE_UPLOAD_KEY_ALIAS: ${{ secrets.MEMBRANE_UPLOAD_KEY_ALIAS }}
+      MEMBRANE_UPLOAD_STORE_PASSWORD: ${{ secrets.MEMBRANE_UPLOAD_STORE_PASSWORD }}
+      MEMBRANE_UPLOAD_KEY_PASSWORD: ${{ secrets.MEMBRANE_UPLOAD_KEY_PASSWORD }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      
+      - name: Check and set up local ip
+        run: |
+          LOCAL_IP=$(ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}')
+          echo "LOCAL_IP=$LOCAL_IP" >> "$GITHUB_ENV"
+          sed -i '' "s/LOCAL_IP/$LOCAL_IP/g" example/.env.production
+          sed -i '' "s/LOCAL_IP/$LOCAL_IP/g" example/android/app/src/main/res/xml/network_security_config.xml
+
+      # - name: Setup JDK 11
+      #   uses: actions/setup-java@v2
+      #   with:
+      #     distribution: "zulu"
+      #     java-version: 11
+
+      # - name: Setup Android SDK
+      #   uses: android-actions/setup-android@v2
+
+      - name: Caching Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Use Node.js 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'yarn'
+
+      - name: Brew
+        run: brew install srtp elixir clang-format ffmpeg && yes | mix local.hex && yes | mix local.rebar
+    
+      - name: Cache elixir deps
+        id: cache-deps
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-elixir-deps
+        with:
+          path: deps
+          key: ${{ runner.os }}-mix-${{ env.cache-name }}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-${{ env.cache-name }}-
+      
+      # - name: Install emulator
+      #   run: ./example/e2e/avd-setup.sh
+      
+      - name: Download elixir deps
+        run: cd example/e2e/backend && mix deps.get
+      
+      - name: Compile backend
+        run: cd example/e2e/backend && mix compile --force --warnings-as-errors
+      
+      - name: Backend web deps
+        run: cd example/e2e/backend/assets && yarn
+      
+      - name: Start backend
+        run: cd example/e2e/backend && INTEGRATED_TURN_IP=${{ env.LOCAL_IP }} mix phx.server &
+      
+      - name: Install js deps
+        run: yarn && cd example && yarn
+      
+      # - name: Build android
+      #   run: cd example && npx detox build -c android.emu.release
+      
+      # - name: Run tests
+      #   run: cd example && npx detox test -c android.emu.release --loglevel verbose
+
+      - name: Run tests
+        run: cd example && yarn test
+      
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: screen1
+          path: example/screen1.png
+
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: screen2
+          path: example/screen2.png
+
+      
+      

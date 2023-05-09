@@ -175,6 +175,6 @@ dependencies {
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutines}"
-  implementation 'com.github.jellyfish-dev:membrane-webrtc-android:4.4.1'
+  implementation 'com.github.jellyfish-dev:membrane-webrtc-android:4.5.1'
   implementation 'com.twilio:audioswitch:1.1.7'
 }

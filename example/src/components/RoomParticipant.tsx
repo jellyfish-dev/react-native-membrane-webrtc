@@ -106,10 +106,14 @@ export const RoomParticipant = ({
   };
 
   return (
-    <View style={styles.fill}>
+    <View
+      style={styles.fill}
+      testID={`room-participant-${metadata.displayName}`}
+    >
       <Pressable onPress={triggerShowingPinButton} style={styles.fill}>
         {participantHasVideo() ? (
           <Membrane.VideoRendererView
+            testID={`video-renderer-${metadata.displayName}`}
             trackId={videoTrack!.id}
             style={getStyleForVideoView()}
             videoLayout={

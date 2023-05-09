@@ -64,6 +64,8 @@ export const Preview = ({ navigation, route }: Props) => {
       await connectAndJoinRoom();
       navigation.navigate('Room');
     } catch (err) {
+      console.log('ERR', err);
+
       showNotification('Error connecting to server', 'error');
       Sentry.captureException(err);
     }
@@ -128,7 +130,7 @@ export const Preview = ({ navigation, route }: Props) => {
             </View>
 
             <View style={styles.joinButton}>
-              <StandardButton onPress={onConnectPress}>
+              <StandardButton onPress={onConnectPress} testID="join-room-btn">
                 Join the room
               </StandardButton>
             </View>

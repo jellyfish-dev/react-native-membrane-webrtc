@@ -34,6 +34,7 @@ type StandardButtonProps = {
   isEnabled?: boolean;
   onPress: () => void;
   children: ReactNode;
+  testID?: string;
 };
 
 export const StandardButton = ({
@@ -41,6 +42,7 @@ export const StandardButton = ({
   isEnabled = true,
   onPress,
   children,
+  testID,
 }: StandardButtonProps) => {
   const debouncedOnPress = useDebounce(onPress);
 
@@ -86,7 +88,11 @@ export const StandardButton = ({
   };
 
   return (
-    <TouchableOpacity onPress={debouncedOnPress} disabled={!isEnabled}>
+    <TouchableOpacity
+      onPress={debouncedOnPress}
+      disabled={!isEnabled}
+      testID={testID}
+    >
       <View style={GetStylesForButtonType(type)}>
         <Typo
           variant="button"

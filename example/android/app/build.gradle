@@ -135,6 +135,8 @@ android {
         versionCode 1
         versionName "0.0.0"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+        testBuildType System.getProperty('testBuildType', 'debug')
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     splits {
         abi {
@@ -145,12 +147,12 @@ android {
         }
     }
     signingConfigs {
-        if (project.hasProperty('MEMBRANE_UPLOAD_STORE_FILE')) {
+        if (System.getenv('MEMBRANE_UPLOAD_STORE_FILE')) {
           release {
-            storeFile file(MEMBRANE_UPLOAD_STORE_FILE)
-            storePassword MEMBRANE_UPLOAD_STORE_PASSWORD
-            keyAlias MEMBRANE_UPLOAD_KEY_ALIAS
-            keyPassword MEMBRANE_UPLOAD_KEY_PASSWORD
+            storeFile file(System.getenv('MEMBRANE_UPLOAD_STORE_FILE'))
+            storePassword System.getenv('MEMBRANE_UPLOAD_STORE_PASSWORD')
+            keyAlias System.getenv('MEMBRANE_UPLOAD_KEY_ALIAS')
+            keyPassword System.getenv('MEMBRANE_UPLOAD_KEY_PASSWORD')
           }
         }
         debug {
@@ -165,11 +167,12 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            if (project.hasProperty('MEMBRANE_UPLOAD_STORE_FILE')) {
+            if (System.getenv('MEMBRANE_UPLOAD_STORE_FILE')) {
               signingConfig signingConfigs.release
             }
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro"
         }
     }
 
@@ -203,6 +206,8 @@ android {
 }
 
 dependencies {
+    androidTestImplementation('com.wix:detox:+')
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

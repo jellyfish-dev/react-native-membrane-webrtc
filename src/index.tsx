@@ -4,8 +4,8 @@ import {
   Platform,
   requireNativeComponent,
   UIManager,
-  ViewStyle,
   NativeEventEmitter,
+  ViewProps,
 } from 'react-native';
 
 function isJest() {
@@ -843,8 +843,7 @@ export type VideoRendererProps = {
    * @default false
    */
   mirrorVideo?: boolean;
-  style?: ViewStyle;
-};
+} & ViewProps;
 
 const VideoRendererViewComponentName = 'VideoRendererView';
 
@@ -873,13 +872,12 @@ export type VideoPreviewViewProps = {
    * @default false
    */
   mirrorVideo?: boolean;
-  style?: ViewStyle;
   /**
    * Id of the camera used for preview. Get available cameras with `getCaptureDevices()` function.
    * @default the first front camera
    */
   captureDeviceId?: string;
-};
+} & ViewProps;
 
 /**
  * A component used for preview of the user's video.

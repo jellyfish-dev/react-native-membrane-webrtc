@@ -109,6 +109,7 @@ export const CreateRoom = ({ navigation, route }: Props) => {
                   placeholder="Room name"
                   value={roomName}
                   onChangeText={setRoomName}
+                  testID="room-name"
                 />
               </View>
               <View style={styles.usernameInputLabel}>
@@ -119,6 +120,7 @@ export const CreateRoom = ({ navigation, route }: Props) => {
                   placeholder="Your name"
                   value={username}
                   onChangeText={setUsername}
+                  testID="user-name"
                 />
               </View>
 
@@ -137,7 +139,7 @@ export const CreateRoom = ({ navigation, route }: Props) => {
                 </>
               ) : null}
 
-              <View style={styles.createRoomButton}>
+              <View style={styles.createRoomButton} testID="create-room-btn">
                 <StandardButton
                   onPress={() => handlePermissions(openPreview)}
                   isEnabled={
