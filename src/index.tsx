@@ -17,6 +17,8 @@ import {
   EndpointsUpdateEvent,
   IsCameraOnEvent,
   IsMicrophoneOnEvent,
+  isSoundDetectedEvent,
+  soundVolume,
   IsScreencastOnEvent,
   LoggingSeverity,
   Metadata,
@@ -433,9 +435,81 @@ export function useMicrophone() {
     []
   );
 
-  return { isMicrophoneOn, toggleMicrophone, startMicrophone };
+  return {
+    isMicrophoneOn,
+    toggleMicrophone,
+    startMicrophone,
+  };
 }
+export function useSoundDetection() {
+  const [isSoundDetected, setIsSoundDetected] = useState<boolean>(false);
+  const [soundVolume, setIsSoundVolumeChanged] = useState<number>(0);
 
+  useEffect(() => {
+    const eventListener = eventEmitter.addListener<isSoundDetectedEvent>(
+      'SoundDetectedEvent',
+      (event) => {
+        const { SoundDetectedEvent } = event;
+        if (typeof SoundDetectedEvent === 'boolean') {
+          setIsSoundDetected(SoundDetectedEvent);
+        }
+      }
+    );
+    setIsSoundDetected(MembraneWebRTCModule.isSoundDetected);
+    return () => eventListener.remove();
+  }, []);
+
+  useEffect(() => {
+    const eventListener = eventEmitter.addListener<soundVolume>(
+      'SoundVolumeChanged',
+      (event) => {
+        const { SoundVolumeChanged } = event;
+        if (typeof SoundVolumeChanged === 'number') {
+          setIsSoundVolumeChanged(SoundVolumeChanged);
+        }
+      }
+    );
+    setIsSoundVolumeChanged(MembraneWebRTCModule.soundVolume);
+    return () => eventListener.remove();
+  }, []);
+
+  /**
+   * Starts local sound detection.
+   * @param monitorInterval (Android only) the time (in milliseconds) between consecutive executions of the task
+   * @param samplingRate (Android only) it specifies how many audio samples are taken per second to digitize the analog audio signal
+   * @param volumeThreshold is a threshold value specified in decibels (dB) that acts as a reference level
+   * @returns A promise that resolves when sound detection is started.
+   */
+  const startSoundDetection = useCallback(
+    async (
+      monitorInterval = 1,
+      samplingRate = 22050,
+      volumeThreshold = -60
+    ) => {
+      await MembraneWebRTCModule.startSoundDetection(
+        monitorInterval,
+        samplingRate,
+        volumeThreshold
+      );
+    },
+    []
+  );
+
+  /**
+   * Stops sound detection.
+   * @returns A promise that resolves when sound detection is stopped.
+   */
+  const stopSoundDetection = useCallback(async () => {
+    await MembraneWebRTCModule.stopSoundDetection();
+  }, []);
+
+  return {
+    isSoundDetected,
+    soundVolume,
+    startSoundDetection,
+    stopSoundDetection,
+  };
+}
 /**
  * This hook can toggle screen sharing on/off and provides current screencast state.
  * @returns An object with functions to manage screencast.

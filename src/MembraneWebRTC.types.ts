@@ -14,7 +14,6 @@ export enum VadStatus {
   Silence = 'silence',
   Speech = 'speech',
 }
-
 /**
  * Type describing possible reasons of currently selected encoding.
  *
@@ -324,6 +323,10 @@ export type EndpointsUpdateEvent<
 export type IsCameraOnEvent = boolean;
 
 export type IsMicrophoneOnEvent = boolean;
+
+export type isSoundDetectedEvent = { SoundDetectedEvent?: boolean };
+
+export type soundVolume = { SoundVolumeChanged?: number };
 
 export type IsScreencastOnEvent = boolean;
 

@@ -10,6 +10,7 @@ import {
   useMicrophone,
   useScreencast,
   ScreencastQuality,
+  useSoundDetection,
 } from '@jellyfish-dev/react-native-membrane-webrtc';
 import { useNotifications } from '@model/NotificationsContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -30,6 +31,7 @@ const VideoroomContext = React.createContext<
       isMicrophoneOn: boolean;
       toggleMicrophone: () => void;
       isScreencastOn: boolean;
+      isSoundDetected: boolean;
       toggleScreencastAndUpdateMetadata: () => void;
       currentCamera: CaptureDevice | null;
       setCurrentCamera: (camera: CaptureDevice | null) => void;
@@ -70,6 +72,8 @@ const VideoroomContextProvider = ({ children }: VideoroomContextProps) => {
   } = useCamera();
   const { toggleMicrophone: membraneToggleMicrophone, startMicrophone } =
     useMicrophone();
+  const { isSoundDetected, startSoundDetection, stopSoundDetection } =
+    useSoundDetection();
   const { isScreencastOn, toggleScreencast: membraneToggleScreencast } =
     useScreencast();
 
@@ -159,6 +163,14 @@ const VideoroomContextProvider = ({ children }: VideoroomContextProps) => {
   const { showNotification } = useNotifications();
 
   useEffect(() => {
+    if (!isMicrophoneOn) {
+      startSoundDetection();
+    } else {
+      stopSoundDetection();
+    }
+  }, [isMicrophoneOn]);
+
+  useEffect(() => {
     if (error) {
       showNotification('Error connecting to server', 'error');
     }
@@ -207,6 +219,7 @@ const VideoroomContextProvider = ({ children }: VideoroomContextProps) => {
     isCameraOn,
     toggleCamera,
     isMicrophoneOn,
+    isSoundDetected,
     toggleMicrophone,
     isScreencastOn,
     toggleScreencastAndUpdateMetadata,

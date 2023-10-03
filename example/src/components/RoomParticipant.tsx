@@ -2,7 +2,7 @@ import { BrandColors, AdditionalColors, TextColors } from '@colors';
 import * as Membrane from '@jellyfish-dev/react-native-membrane-webrtc';
 import { useVideoroomState } from '@model/VideoroomContext';
 import React, { useRef, useState } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Text } from 'react-native';
 import Animated, {
   useSharedValue,
   withTiming,
@@ -49,7 +49,7 @@ export const RoomParticipant = ({
 
   const [showPinButton, setShowPinButton] = useState(false);
   const isPinButtonShown = useRef(false);
-  const { isDevMode } = useVideoroomState();
+  const { isDevMode, isSoundDetected } = useVideoroomState();
 
   const videoTrack = trackId ? tracks.find((t) => t.id === trackId) : null;
   const videoTrackType = videoTrack?.metadata.type;
@@ -122,11 +122,15 @@ export const RoomParticipant = ({
     if (!audioTrack?.metadata.active) {
       return (
         <View style={styles.audioIcon}>
-          <Icon
-            name="Microphone-off"
-            size={16}
-            color={BrandColors.darkBlue100}
-          />
+          {isSoundDetected ? (
+            <Text>You're muted</Text>
+          ) : (
+            <Icon
+              name="Microphone-off"
+              size={16}
+              color={BrandColors.darkBlue100}
+            />
+          )}
         </View>
       );
     }

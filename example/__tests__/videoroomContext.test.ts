@@ -34,6 +34,8 @@ sentry.setExtra = setExtra;
 const useCameraMock = jest.fn(NOOP);
 const startCameraMock = jest.fn(NOOP);
 const useMicrophoneMock = jest.fn(NOOP);
+const startSoundDetectionMock = jest.fn(NOOP);
+const stopSoundDetectionMock = jest.fn(NOOP);
 const startMicrophoneMock = jest.fn(NOOP);
 const updateVideoTrackMetadataMock = jest.fn(NOOP);
 const updateAudioTrackMetadataMock = jest.fn(NOOP);
@@ -55,6 +57,13 @@ membraneWebRTC.useMicrophone = () => {
   return {
     toggleMicrophone: useMicrophoneMock,
     startMicrophone: startMicrophoneMock,
+  };
+};
+membraneWebRTC.useSoundDetection = () => {
+  return {
+    isSoundDetected: false,
+    startSoundDetection: startSoundDetectionMock,
+    stopSoundDetection: stopSoundDetectionMock,
   };
 };
 membraneWebRTC.updateVideoTrackMetadata = updateVideoTrackMetadataMock;

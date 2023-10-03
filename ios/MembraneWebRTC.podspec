@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.homepage       = package['homepage']
   s.platform       = :ios, '13.0'
   s.swift_version  = '5.4'
-  s.source         = { git: 'https://github.com/graszka22/jellyfish-dev-react-native-membrane-webrtc' }
+  s.source         = { git: 'https://github.com/jellyfish-dev/react-native-membrane-webrtc' }
   s.static_framework = true
 
   s.dependency 'ExpoModulesCore'
@@ -25,5 +25,5 @@ Pod::Spec.new do |s|
   
   s.source_files = "**/*.{h,m,swift}"
 
-  s.dependency "MembraneRTC", '5.0.0'
+  s.dependency "MembraneRTC", '5.1.0'
 end

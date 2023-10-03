@@ -9,7 +9,7 @@ def expoDebuggableVariants = ['debug']
 if (System.getenv('EX_UPDATES_NATIVE_DEBUG') == "1") {
   react {
     expoDebuggableVariants = []
-  }
+}
 }
 
 
@@ -200,7 +200,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
+    
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
     def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";
