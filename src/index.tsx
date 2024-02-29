@@ -56,6 +56,10 @@ const defaultSimulcastConfig = () => ({
 let videoSimulcastConfig: SimulcastConfig = defaultSimulcastConfig();
 let screencastSimulcastConfig: SimulcastConfig = defaultSimulcastConfig();
 
+export async function create(): Promise<void> {
+  await MembraneWebRTCModule.create();
+}
+
 /**
  * The hook used to manage a connection with membrane server.
  * @returns An object with functions to manage membrane server connection and `error` if connection failed.
