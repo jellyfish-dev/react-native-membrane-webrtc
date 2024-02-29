@@ -56,9 +56,6 @@ const defaultSimulcastConfig = () => ({
 let videoSimulcastConfig: SimulcastConfig = defaultSimulcastConfig();
 let screencastSimulcastConfig: SimulcastConfig = defaultSimulcastConfig();
 
-export async function create(): Promise<void> {
-  await MembraneWebRTCModule.create();
-}
 
 /**
  * The hook used to manage a connection with membrane server.
@@ -605,7 +602,10 @@ export function useAudioSettings() {
       ReceivableEvents.AudioDeviceUpdate,
       onAudioDevice
     );
-    MembraneWebRTCModule.startAudioSwitcher();
+    MembraneWebRTCModule.create().then( _=>{
+      MembraneWebRTCModule.startAudioSwitcher();
+    });
+
     return () => {
       eventListener.remove();
       if (Platform.OS === 'android') {
